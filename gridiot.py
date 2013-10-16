@@ -80,5 +80,5 @@ def process_list(joblist,nodelist):
         print "\n\n ----- %d / %d done -----"%(donenumber,len(jobobjlist))
         for j in activelist:
             print "active : %s@%s - %s"%(j.node.username, j.node.ip, j.befehl)
-        sleep(1)
+        sleep(7)
 
