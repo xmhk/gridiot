@@ -1,6 +1,6 @@
 # gridiot.py
 
-Rev 2, oct 18, 2013
+Rev 3, oct 18, 2013
 
 * you will need automatic login via ssh-keys
 * on remote machines, your will need some RC file that sets your path for non-interactive shells
