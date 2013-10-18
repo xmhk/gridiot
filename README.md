@@ -14,10 +14,13 @@ Rev 2, oct 18, 2013
     * workdir
     * freeslots
     * mode
+
 ###\_\_init\_\_( username, ip, port, workdir, maxslots, mode)
 
 ###get_command( befehl )
 
+###clear\_workdir
+* remove the working directory on the remote machine
 
 ##class Job\_Object()
 ### \_\_init\_\_(self, befehl)
@@ -32,3 +35,6 @@ Rev 2, oct 18, 2013
 
 ##pull\_from\_nodes(nodelist)
 * be careful with this!!! remote files will overwrite files that were pushed and that changed in the meantime!!!
+
+##clear\_node\_workdirs(nodelist)
+* clear the workdirs on the nodes in nodelist

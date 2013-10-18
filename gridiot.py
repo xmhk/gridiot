@@ -25,6 +25,12 @@ class Computing_Node():
     def get_command(self, ccommand):
         sshpart = "ssh %s@%s -p %d"%(self.username, self.ip,self.port)
         return "%s 'cd %s && %s'"%(sshpart,self.workdir,ccommand)
+    
+    def clear_workdir(self):
+        print "--- clearing working directory on %s@%s"%(self.username, self.ip)
+        ccommand  = "ssh %s@%s -p %d 'cd && rm -fr %s'"%(self.username, self.ip,self.port, self.workdir)
+        ossystem( ccommand )
+        
 
 
 class Job_Object():
@@ -89,14 +95,14 @@ def process_list(joblist,nodelist):
         for j in activelist:
             print "active : %s@%s - %s"%(j.node.username, j.node.ip, j.ccommand)
         counter += 1
-        sleep(7)
+        sleep(5)
 
 
 def push_to_nodes( nodelist, pushfilelist):
     for node in nodelist:
-        ccommand = 'rsync -azvhc --progress --exclude=%s '%(sysargv[0]) #you don't want to push your control file
+        ccommand = 'rsync -rlzvhc --progress --exclude=%s '%(sysargv[0]) #you don't want to push your control file
+        # compression on switch = -z
 
-        # withou compression    ccommand = 'rsync -avh '
         for pd in pushfilelist:
             ccommand+=pd+' '
         ccommand += ' -e "ssh -p %s"  %s@%s:%s'%(node.port,node.username,node.ip,node.workdir)
@@ -107,8 +113,13 @@ def push_to_nodes( nodelist, pushfilelist):
 
 def pull_from_nodes(nodelist):
     for node in nodelist:
-        ccommand = 'rsync -avhc --progress %s@%s:%s/ ./ -e "ssh -p %s" --exclude=%s  '%(node.username,node.ip,node.workdir,node.port,sysargv[0])
-# without compression    ccommand = 'rsync -avh --progress %s@%s:%s ./ -e "ssh -p %s "  '%(node.username,node.ip,node.workdir,node.port)
+        ccommand = 'rsync -rlvzhc --progress %s@%s:%s/ ./ -e "ssh -p %s" --exclude=%s  '%(node.username,node.ip,node.workdir,node.port,sysargv[0])
+        # compression on switch = -z
+
         print "++ rsynccommand = ",ccommand
         ossystem(ccommand)
 
+
+def clear_node_workdirs(nodelist):
+    for node in nodelist:
+        node.clear_workdir()
