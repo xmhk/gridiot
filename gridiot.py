@@ -1,6 +1,12 @@
 from subprocess import Popen
 from time import sleep
 
+
+from os import system as ossystem
+from sys import argv as sysargv
+
+
+
 class Computing_Node():
     def __init__(self,
                  username,
@@ -16,14 +22,14 @@ class Computing_Node():
         self.freeslots = maxslots
         self.mode = mode
 
-    def get_command(self, befehl):
+    def get_command(self, ccommand):
         sshpart = "ssh %s@%s -p %d"%(self.username, self.ip,self.port)
-        return "%s 'cd %s && %s'"%(sshpart,self.workdir,befehl)
+        return "%s 'cd %s && %s'"%(sshpart,self.workdir,ccommand)
 
 
 class Job_Object():
-    def __init__(self, befehl):
-        self.befehl = befehl
+    def __init__(self, ccommand):
+        self.ccommand = ccommand
         self.done = False
         self.active = False
         self.started = False
@@ -35,7 +41,7 @@ class Job_Object():
         self.node = node
         self.started = True
         self.active = True
-        self.process = Popen( self.node.get_command(self.befehl),shell=True,stdout=None)
+        self.process = Popen( self.node.get_command(self.ccommand),shell=True,stdout=None)
         self.node.freeslots-=1
 #        print "starting job on %s@%s"%(self.node.username,self.node.ip)
 
@@ -81,7 +87,28 @@ def process_list(joblist,nodelist):
 
         print "\n\n ----- %d / %d done ... step %d-----"%(donenumber,len(jobobjlist),counter)
         for j in activelist:
-            print "active : %s@%s - %s"%(j.node.username, j.node.ip, j.befehl)
+            print "active : %s@%s - %s"%(j.node.username, j.node.ip, j.ccommand)
         counter += 1
         sleep(7)
+
+
+def push_to_nodes( nodelist, pushfilelist):
+    for node in nodelist:
+        ccommand = 'rsync -azvhc --progress --exclude=%s '%(sysargv[0]) #you don't want to push your control file
+
+        # withou compression    ccommand = 'rsync -avh '
+        for pd in pushfilelist:
+            ccommand+=pd+' '
+        ccommand += ' -e "ssh -p %s"  %s@%s:%s'%(node.port,node.username,node.ip,node.workdir)
+        print "++ rsynccommand = ",ccommand
+        ossystem(ccommand)
+
+
+
+def pull_from_nodes(nodelist):
+    for node in nodelist:
+        ccommand = 'rsync -avhc --progress %s@%s:%s/ ./ -e "ssh -p %s" --exclude=%s  '%(node.username,node.ip,node.workdir,node.port,sysargv[0])
+# without compression    ccommand = 'rsync -avh --progress %s@%s:%s ./ -e "ssh -p %s "  '%(node.username,node.ip,node.workdir,node.port)
+        print "++ rsynccommand = ",ccommand
+        ossystem(ccommand)
 

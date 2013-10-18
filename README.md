@@ -1,6 +1,6 @@
 # gridiot.py
 
-Rev 1, oct 18, 2013
+Rev 2, oct 18, 2013
 
 * you will need automatic login via ssh-keys
 * on remote machines, your will need some RC file that sets your path for non-interactive shells
@@ -20,10 +20,15 @@ Rev 1, oct 18, 2013
 
 
 ##class Job\_Object()
-### __init__(self, befehl)
+### \_\_init\_\_(self, befehl)
 ### start( self, node)
 ### def check( self):
 
 
-##process_list(joblist,nodelist):
+##process\_list(joblist,nodelist)
 
+##push\_to\_nodes( nodelist, pushfilelist)
+* a list of files (or wildcards) in pushfilelist are transferred to the workdir on the remote machine
+
+##pull\_from\_nodes(nodelist)
+* be careful with this!!! remote files will overwrite files that were pushed and that changed in the meantime!!!
