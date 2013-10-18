@@ -58,7 +58,9 @@ def process_list(joblist,nodelist):
     #make a list of jobobjects
     jobobjlist=[ Job_Object( jj ) for jj in joblist]
     alldone = False or len(jobobjlist)==0    
+    counter = 0
     while not alldone:
+
         for n in nodelist:
 #            print n.ip, n.freeslots
             for j in jobobjlist:
@@ -77,8 +79,9 @@ def process_list(joblist,nodelist):
 
             alldone = alldone and j.done
 
-        print "\n\n ----- %d / %d done -----"%(donenumber,len(jobobjlist))
+        print "\n\n ----- %d / %d done ... step %d-----"%(donenumber,len(jobobjlist),counter)
         for j in activelist:
             print "active : %s@%s - %s"%(j.node.username, j.node.ip, j.befehl)
+        counter += 1
         sleep(7)
 
