@@ -31,6 +31,9 @@ class Computing_Node():
         ccommand  = "ssh %s@%s -p %d 'cd && rm -fr %s'"%(self.username, self.ip,self.port, self.workdir)
         ossystem( ccommand )
         
+    def print_df(self, extracommand):
+        ccommand  = "ssh %s@%s -p %d 'df -h -l %s'"%(self.username, self.ip,self.port,extracommand)
+        ossystem( ccommand )
 
 
 class Job_Object():
@@ -113,7 +116,7 @@ def push_to_nodes( nodelist, pushfilelist):
 
 def pull_from_nodes(nodelist):
     for node in nodelist:
-        ccommand = 'rsync -rlvzhc --progress %s@%s:%s/ ./ -e "ssh -p %s" --exclude=%s  '%(node.username,node.ip,node.workdir,node.port,sysargv[0])
+        ccommand = 'rsync -rlvzhc --progress %s@%s:%s ./ -e "ssh -p %s" --exclude=%s  '%(node.username,node.ip,node.workdir,node.port,sysargv[0])
         # compression on switch = -z
 
         print "++ rsynccommand = ",ccommand
@@ -123,3 +126,9 @@ def pull_from_nodes(nodelist):
 def clear_node_workdirs(nodelist):
     for node in nodelist:
         node.clear_workdir()
+
+
+def print_df(nodelist):
+    for node in nodelist:
+        print "\n\n --- df on %s@%s --- "%(node.username,node.ip)
+        node.print_df("| grep sda")
