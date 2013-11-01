@@ -6,7 +6,6 @@ from sys import argv as sysargv
 def addslash( directory ):  #make sure that directories end with '/' for rsync commands
     if directory[len(directory)-1] != "/":
         directory+="/"
-        #print "added"
     return directory
 
 
@@ -43,8 +42,6 @@ class Computing_Node(): #represents a local or remote computing node
             print "--- clearing local working directory on %s@%s"%(self.username, self.ip)
             ccommand = "rm -fr %s"%self.workdir
             ossystem(ccommand)
-          #  print ccommand
-         #   print "\n\n\n !!! TODO write a secure local clearing!!!\n\n\n "
 
     def print_df(self, extracommand):
         if self.mode.lower() == 'remote':
@@ -84,18 +81,11 @@ class Job_Object():  #represents a job
 
 
 def process_list(joblist,nodelist):
-    #determine maximum processors
-    maxpro = 0    
-    for n in nodelist:
-        maxpro += n.freeslots
-    #make a list of jobobjects
     jobobjlist=[ Job_Object( jj ) for jj in joblist]
     alldone = False or len(jobobjlist)==0    
     counter = 0
     while not alldone:
-
         for n in nodelist:
-#            print n.ip, n.freeslots
             for j in jobobjlist:
                 if j.started == False:
                     if n.freeslots>0:                
@@ -109,9 +99,7 @@ def process_list(joblist,nodelist):
                 activelist.append(j)
             if j.done:
                 donenumber +=1
-
             alldone = alldone and j.done
-
         print "\n\n ----- %d / %d done ... step %d-----"%(donenumber,len(jobobjlist),counter)
         for j in activelist:
             print "active : %s@%s - %s"%(j.node.username, j.node.ip, j.ccommand)
