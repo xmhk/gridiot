@@ -1,6 +1,6 @@
 # gridiot.py
 
-Rev 5, nov 1, 2013
+Rev 6, nov 15, 2013
 
 * you will need automatic login via ssh-keys
 * on remote machines, your will need some RC file that sets your path for non-interactive shells
@@ -17,7 +17,7 @@ Rev 5, nov 1, 2013
     * mode          -> 'remote' or 'local'
     * returndir     -> local dir that will be synced to after joblist is done
 
-###\_\_init\_\_( username, ip, port, workdir, maxslots, mode)
+###\_\_init\_\_( username, ip, port, workdir, maxslots, mode, returndir)
 
 ###get_command( befehl )
 
